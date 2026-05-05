@@ -1,0 +1,25 @@
+swagger: '2.0'
+info:
+  title: Spark MCP Server
+  description: MCP server for Spark.re CRM - search contacts, log interactions, analytics
+  version: 1.0.0
+host: spark-mcp-production.up.railway.app
+basePath: /
+schemes:
+  - https
+securityDefinitions:
+  apiKeyHeader:
+    type: apiKey
+    in: header
+    name: Authorization
+security:
+  - apiKeyHeader: []
+paths:
+  /mcp:
+    post:
+      summary: Spark CRM MCP Server
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      responses:
+        '200':
+          description: Success

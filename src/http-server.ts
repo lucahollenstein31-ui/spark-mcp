@@ -11,8 +11,11 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'spark-mcp' });
 });
 
-// Streamable HTTP endpoint — required by Copilot Studio
 app.post('/mcp', async (req, res) => {
+  const sparkKey = req.headers['x-spark-key'];
+  if (sparkKey) {
+    req.headers['authorization'] = `Bearer ${sparkKey}`;
+  }
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
   });
