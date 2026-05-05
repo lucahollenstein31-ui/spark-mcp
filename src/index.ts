@@ -2290,7 +2290,14 @@ async function handleGetSalesFunnel(args: any) {
 }
 
 /**
- * Start the server
+ * Export server factory for HTTP transport
+ */
+export function createSparkMCPServer() {
+  return server;
+}
+
+/**
+ * Start the server (stdio for Claude Desktop)
  */
 async function main() {
   const transport = new StdioServerTransport();
