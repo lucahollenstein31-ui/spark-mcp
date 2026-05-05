@@ -1,9 +1,9 @@
 import express from 'express';
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createSparkMCPServer } from './index.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 
@@ -11,14 +11,14 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'spark-mcp' });
 });
 
-app.get('/sse', async (req, res) => {
-  const transport = new SSEServerTransport('/messages', res);
+// Streamable HTTP endpoint — required by Copilot Studio
+app.post('/mcp', async (req, res) => {
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+  });
   const server = createSparkMCPServer();
   await server.connect(transport);
-});
-
-app.post('/messages', async (req, res) => {
-  res.status(200).json({ received: true });
+  await transport.handleRequest(req, res, req.body);
 });
 
 app.listen(PORT, () => {
